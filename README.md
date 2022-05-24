@@ -16,6 +16,7 @@ Api para cadastros de usuarios
 ```
   git clone https://github.com/matheusburey/api_restful_express.git
   cd api_restful_express
+  npm install
   cp .env.example .env
   docker-compose up
 ```
