@@ -18,10 +18,11 @@ Api para cadastros de usuarios
   cd api_restful_express
   npm install
   cp .env.example .env
-  docker-compose up
+  docker-compose -d up
+  docker exec -it node_express npx knex migrate:latest
 ```
 
 ### EndPoint
 foi usado swagger para documentação dos endpoints
 
-`http://localhost:<PORT>/api-docs/api-documentation`
+`http://localhost:3000/api-docs/api-documentation`
