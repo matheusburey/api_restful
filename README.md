@@ -19,3 +19,8 @@ Api para cadastros de usuarios
   cp .env.example .env
   docker-compose up
 ```
+
+### EndPoint
+foi usado swagger para documentação dos endpoints
+
+`http://localhost:<PORT>/api-docs/api-documentation`
