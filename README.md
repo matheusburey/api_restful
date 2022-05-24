@@ -18,7 +18,7 @@ Api para cadastros de usuarios
   cd api_restful_express
   npm install
   cp .env.example .env
-  docker-compose -d up
+  docker-compose up -d
   docker exec -it node_express npx knex migrate:latest
 ```
 
