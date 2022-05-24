@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE ${PORT}
 
-CMD npm run docker:dev
+CMD npm run dev
