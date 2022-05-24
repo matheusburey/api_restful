@@ -3,11 +3,11 @@ import IGetUserDTO from "../dtos/IGetUserDTO";
 
 interface IUserRepository {
   getAll: () => Promise<IGetUserDTO[]>;
-  getById: (id: number) => Promise<IGetUserDTO>;
+  getById: (id: string) => Promise<IGetUserDTO>;
   create: (data: ICreateUserDTO) => Promise<IGetUserDTO>;
-  update: (id: number, data: ICreateUserDTO) => Promise<IGetUserDTO>;
+  update: (id: string, data: ICreateUserDTO) => Promise<IGetUserDTO>;
   deleteAll: () => Promise<IGetUserDTO[]>;
-  delete: (id: number) => Promise<IGetUserDTO>;
+  delete: (id: string) => Promise<IGetUserDTO>;
 }
 
 export default IUserRepository;

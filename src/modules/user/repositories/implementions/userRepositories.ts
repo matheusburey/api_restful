@@ -10,7 +10,7 @@ class UserRepository implements IUserRepository {
     return this.repository.select().from("users");
   }
 
-  async getById(id: number): Promise<IGetUserDTO> {
+  async getById(id: string): Promise<IGetUserDTO> {
     return this.repository.select().where({ id }).from("users");
   }
 
@@ -18,7 +18,7 @@ class UserRepository implements IUserRepository {
     return this.repository.insert(data, "*").into("users");
   }
 
-  async update(id: number, data: ICreateUser): Promise<IGetUserDTO | any> {
+  async update(id: string, data: ICreateUser): Promise<IGetUserDTO | any> {
     return this.repository("users").where({ id }).update(data, "*");
   }
 
@@ -26,8 +26,8 @@ class UserRepository implements IUserRepository {
     return this.repository("users").del("*");
   }
 
-  async delete(id: number): Promise<IGetUserDTO | any> {
-    return this.repository("users").where(id).del("*");
+  async delete(id: string): Promise<IGetUserDTO | any> {
+    return this.repository("users").where({ id }).del("*");
   }
 }
 
