@@ -137,8 +137,8 @@
               "examples": {
                 "user": {
                   "value": {
-                    "name": "user",
-                    "email": "user@email.com"
+                    "name": "update",
+                    "email": "update@email.com"
                   }
                 }
               }
