@@ -5,7 +5,7 @@ import GetAllUserCase from "./getAllUsersUseCase";
 class GetAllUsersController {
   async handle(_: Request, res: Response): Promise<Response> {
     const users = await new GetAllUserCase().execute();
-    return res.json({ users });
+    return res.json(users);
   }
 }
 
