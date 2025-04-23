@@ -1,9 +1,6 @@
-version: "3.9"
-
 services:
   database:
     image: postgres
-    container_name: express_database
     ports:
       - ${DB_PORT}:5432
     environment:
@@ -11,20 +8,8 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - pgdata:/data/postgres
-
-  app:
-    build: .
-    container_name: node_express
-    ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - .:/usr/app
-    links:
-      - database
-    depends_on:
-      - database
+      - database:/data/postgres
 
 volumes:
-  pgdata:
+  database:
     driver: local
