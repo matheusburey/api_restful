@@ -43,3 +43,7 @@ func MaxLength(value string, length int) bool {
 func Match(value string, rx *regexp.Regexp) bool {
 	return rx.MatchString(value)
 }
+
+func IsEmail(value string) bool {
+	return Match(value, regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"))
+}

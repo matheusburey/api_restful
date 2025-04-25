@@ -5,18 +5,22 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/matheusburey/api_restful/internal/usecase/users"
 	"github.com/matheusburey/api_restful/internal/utils"
 )
 
 func (api *Api) HandlerGetAllUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	users, err := api.UsersService.GetAllUsers(r.Context())
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusInternalServerError, err)
+		return
+	}
+	utils.EncodeJSON(w, r, http.StatusOK, users)
 }
 
 func (api *Api) HandlerPostUser(w http.ResponseWriter, r *http.Request) {
-	data, problems, err := utils.DecodeValidJSON[users.CreateUserReq](r)
+	data, problems, err := utils.DecodeValidJSON[users.UserReqBody](r)
 
 	if err != nil {
 		utils.EncodeJSON(w, r, http.StatusBadRequest, problems)
@@ -37,14 +41,13 @@ func (api *Api) HandlerPostUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *Api) HandlerGetUser(w http.ResponseWriter, r *http.Request) {
-	raw_id := chi.URLParam(r, "id")
+	id, err := utils.ValidateAndParseUUID(chi.URLParam(r, "id"))
 
-	if err := uuid.Validate(raw_id); err != nil {
+	if err != nil {
 		utils.EncodeJSON(w, r, http.StatusBadRequest, map[string]string{"error": "invalid id"})
 		return
 	}
 
-	id := uuid.MustParse(raw_id)
 	u, err := api.UsersService.GetUserById(r.Context(), id)
 
 	if err != nil {
@@ -56,9 +59,44 @@ func (api *Api) HandlerGetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *Api) HandlerDeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	id, err := utils.ValidateAndParseUUID(chi.URLParam(r, "id"))
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		return
+	}
+
+	err = api.UsersService.DeleteUser(r.Context(), id)
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusNotFound, map[string]string{"error": "user not found"})
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func (api *Api) HandlerUpdateUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	id, err := utils.ValidateAndParseUUID(chi.URLParam(r, "id"))
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		return
+	}
+
+	data, problems, err := utils.DecodeValidJSON[users.UserReqBody](r)
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusBadRequest, problems)
+		return
+	}
+
+	u, err := api.UsersService.UpdateUser(r.Context(), id, data.Name, data.Email)
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusInternalServerError, map[string]string{"error": "something went wrong"})
+		return
+	}
+
+	utils.EncodeJSON(w, r, http.StatusOK, u)
 }

@@ -33,3 +33,26 @@ func (us *UsersService) GetUserById(ctx context.Context, id uuid.UUID) (pgstore.
 	}
 	return pgstore.User{ID: u.ID, Name: u.Name, Email: u.Email}, nil
 }
+
+func (us *UsersService) GetAllUsers(ctx context.Context) ([]pgstore.User, error) {
+	u, err := us.q.GetAllUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func (us *UsersService) UpdateUser(ctx context.Context, id uuid.UUID, name, email string) (pgstore.User, error) {
+	u, err := us.q.UpdateUser(ctx, pgstore.UpdateUserParams{ID: id, Name: name, Email: email})
+	if err != nil {
+		return pgstore.User{}, err
+	}
+	return pgstore.User{ID: u.ID, Name: u.Name, Email: u.Email}, nil
+}
+
+func (us *UsersService) DeleteUser(ctx context.Context, id uuid.UUID) error {
+	if err := us.q.DeleteUser(ctx, id); err != nil {
+		return err
+	}
+	return nil
+}
