@@ -4,16 +4,12 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/matheusburey/api_restful/internal/usecase/users"
 	"github.com/matheusburey/api_restful/internal/utils"
 )
-
-type User struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
 
 func (api *Api) HandlerGetAllUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("ok"))
@@ -41,7 +37,22 @@ func (api *Api) HandlerPostUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *Api) HandlerGetUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	raw_id := chi.URLParam(r, "id")
+
+	if err := uuid.Validate(raw_id); err != nil {
+		utils.EncodeJSON(w, r, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		return
+	}
+
+	id := uuid.MustParse(raw_id)
+	u, err := api.UsersService.GetUserById(r.Context(), id)
+
+	if err != nil {
+		utils.EncodeJSON(w, r, http.StatusNotFound, map[string]string{"error": "user not found"})
+		return
+	}
+
+	utils.EncodeJSON(w, r, http.StatusOK, u)
 }
 
 func (api *Api) HandlerDeleteUser(w http.ResponseWriter, r *http.Request) {
